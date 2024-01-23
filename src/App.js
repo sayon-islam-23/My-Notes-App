@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from 'react'
+import Navbar from './Navbar'
+import Footer from './Footer'
+import CreateNotes from './CreateNotes'
+import Card from './Card'
 
-function App() {
+const App = () => {
+  const [addItem, setAddItem] = useState([]);
+  const addNote = (note) => {
+    setAddItem((prevData) => {
+      return [...prevData, note]
+    })
+  }
+  const onDelete = (id) =>{
+    setAddItem((oldData)=>
+      oldData.filter((curData, index)=>{
+        return index !== id;
+      })
+    )
+  }
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <>
+      <Navbar />
+      <CreateNotes passNote={addNote} />
+      <div className='container'>
+        <div className='row'>
+          {addItem.map((val, index) => {
+            return (<div className='col-md-3 my-1'>
+              <Card key={index} id={index} title={val.title} content={val.content} deleteItem = {onDelete}/>
+            </div>
+            );
+          })}
+        </div>
+      </div>
+      <Footer />
+    </>
+  )
 }
 
-export default App;
+export default App
